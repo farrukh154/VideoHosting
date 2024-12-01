@@ -49,6 +49,20 @@
                     @endauth
                 </nav>
             @endif
+
+            <h2>YouTube Videos</h2>
+            @if (empty($videos))
+                <p>No videos found.</p>
+            @else
+                @foreach($videos as $video)
+                    <div class="video">
+                        <h5>{{ $video['snippet']['title'] }}</h5>
+                        <p>{{ $video['snippet']['description'] }}</p>
+                        <iframe width="560" height="315" src="https://www.youtube.com/embed/{{ $video['id']['videoId'] }}" frameborder="0" allowfullscreen></iframe> <!-- Встраивание видео -->
+                        <img src="{{ $video['snippet']['thumbnails']['default']['url'] }}" alt="{{ $video['snippet']['title'] }}">
+                    </div>
+                @endforeach
+            @endif
         </header>
     </body>
 </html>
