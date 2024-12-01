@@ -3,7 +3,7 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
         <title>Laravel</title>
 
         <!-- Fonts -->
@@ -20,49 +20,57 @@
         @endif
     </head>
     <body class="font-sans antialiased dark:bg-black dark:text-white/50">
-        <header>
-            @if (Route::has('login'))
-                <nav class="-mx-3 flex flex-1 justify-end">
-                    @auth
-                        <a
-                            href="{{ url('/dashboard') }}"
-                            class="rounded-md px-3 py-2 text-black ring-1 ring-transparent transition hover:text-black/70 focus:outline-none focus-visible:ring-[#FF2D20] dark:text-white dark:hover:text-white/80 dark:focus-visible:ring-white"
-                        >
-                            Dashboard
-                        </a>
-                    @else
-                        <a
-                            href="{{ route('login') }}"
-                            class="rounded-md px-3 py-2 text-black ring-1 ring-transparent transition hover:text-black/70 focus:outline-none focus-visible:ring-[#FF2D20] dark:text-white dark:hover:text-white/80 dark:focus-visible:ring-white"
-                        >
-                            Log in
-                        </a>
-
-                        @if (Route::has('register'))
-                            <a
-                                href="{{ route('register') }}"
-                                class="rounded-md px-3 py-2 text-black ring-1 ring-transparent transition hover:text-black/70 focus:outline-none focus-visible:ring-[#FF2D20] dark:text-white dark:hover:text-white/80 dark:focus-visible:ring-white"
-                            >
-                                Register
-                            </a>
-                        @endif
-                    @endauth
-                </nav>
-            @endif
-
-            <h2>YouTube Videos</h2>
-            @if (empty($videos))
-                <p>No videos found.</p>
+    <header>
+    @if (Route::has('login'))
+        <nav class="-mx-3 flex flex-1 justify-end">
+            @auth
+                <span class="rounded-md px-3 py-2 text-black dark:text-white">
+                    Добро пожаловать, {{ Auth::user()->name }}! <!-- Отображаем ник пользователя -->
+                </span>
+                <form action="{{ route('logout') }}" method="POST" class="inline"> <!-- Форма для выхода -->
+                    @csrf <!-- Защита от CSRF -->
+                    <button type="submit" class="rounded-md px-3 py-2 text-black ring-1 ring-transparent transition hover:text-black/70 focus:outline-none focus-visible:ring-[#FF2D20] dark:text-white dark:hover:text-white/80 dark:focus-visible:ring-white">
+                        Log out
+                    </button>
+                </form>
             @else
-                @foreach($videos as $video)
-                    <div class="video">
-                        <h5>{{ $video['snippet']['title'] }}</h5>
-                        <p>{{ $video['snippet']['description'] }}</p>
-                        <iframe width="560" height="315" src="https://www.youtube.com/embed/{{ $video['id']['videoId'] }}" frameborder="0" allowfullscreen></iframe> <!-- Встраивание видео -->
-                        <img src="{{ $video['snippet']['thumbnails']['default']['url'] }}" alt="{{ $video['snippet']['title'] }}">
-                    </div>
-                @endforeach
-            @endif
-        </header>
+                <a
+                    href="{{ route('login') }}"
+                    class="rounded-md px-3 py-2 text-black ring-1 ring-transparent transition hover:text-black/70 focus:outline-none focus-visible:ring-[#FF2D20] dark:text-white dark:hover:text-white/80 dark:focus-visible:ring-white"
+                >
+                    Log in
+                </a>
+
+                @if (Route::has('register'))
+                    <a
+                        href="{{ route('register') }}"
+                        class="rounded-md px-3 py-2 text-black ring-1 ring-transparent transition hover:text-black/70 focus:outline-none focus-visible:ring-[#FF2D20] dark:text-white dark:hover:text-white/80 dark:focus-visible:ring-white"
+                    >
+                        Register
+                    </a>
+                @endif
+            @endauth
+        </nav>
+    @endif
+</header>
+
+<h2 class>YouTube Videos</h2>
+<div class="container">
+    <div class="row">
+        @foreach($videos as $video)
+            <div class="col-md-4"> <!-- Используем col-md-4 для 3 колонок в ряду -->
+                <div class="video mb-4"> <!-- Добавляем отступ снизу для визуального разделения -->
+                    <h5>{{ $video['snippet']['title'] }}</h5>
+                    @if (isset($video['id']) && is_string($video['id']))
+                        <iframe width="90%" height="285" src="https://www.youtube.com/embed/{{ $video['id'] }}" frameborder="0" allowfullscreen></iframe>
+                    @else
+                        <p>Video ID not available.</p>
+                    @endif
+                </div>
+            </div>
+        @endforeach
+    </div>
+</div>
+
     </body>
 </html>
