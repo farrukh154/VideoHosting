@@ -20,6 +20,7 @@
     @endif
 </head>
 <body class="font-sans antialiased dark:bg-black dark:text-white/50">
+<a href="{{ route('watch_later.list') }}" class="btn btn-secondary">Смотреть позже</a>
 <div class="mt-5">
     <h3 class="text-center">Поиск видео</h3>
     <form action="{{ route('video.search') }}" method="GET">
@@ -65,7 +66,7 @@
                 <div class="video mb-4">
                     @if (isset($video['id']) && is_string($video['id']))
                         <iframe width="100%" height="255" src="https://www.youtube.com/embed/{{ $video['id'] }}" frameborder="0" allowfullscreen></iframe>
-                        <h5 class="pt-" style="color: white; font-weight: bold;">{{ $video['snippet']['title'] }}</h5>
+                    <h5 class="pt-" style="color: white; font-weight: bold;">{{ $video['snippet']['title'] }}</h5>
                     @else
                         <p>Video ID not available.</p>
                     @endif

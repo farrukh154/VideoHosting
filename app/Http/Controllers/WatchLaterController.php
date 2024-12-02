@@ -9,22 +9,25 @@ class WatchLaterController extends Controller
 {
     public function add(Request $request, $videoId)
     {
-        $userId = auth()->id(); // Получаем ID авторизованного пользователя
+        $user = auth()->user();
 
-        // Проверяем, существует ли запись
-        $exists = WatchLater::where('user_id', $userId)->where('video_id', $videoId)->exists();
+        // Проверяем, добавлено ли уже это видео в список пользователя
+        $exists = WatchLater::where('user_id', $user->id)
+                            ->where('video_id', $videoId)
+                            ->exists();
+
         if ($exists) {
-            return redirect()->back()->with('message', 'Видео уже добавлено в список "Посмотреть позже".');
+            return response()->json(['message' => 'Это видео уже добавлено в "Посмотреть позже"'], 400);
         }
 
-        // Добавляем запись
+        // Добавляем видео в список "Посмотреть позже"
         WatchLater::create([
-            'user_id' => $userId,
+            'user_id' => $user->id,
             'video_id' => $videoId,
-            'video_title' => $request->input('video_title'),
+            'video_title' => $request->video_title,
         ]);
 
-        return redirect()->back()->with('message', 'Видео добавлено в список "Посмотреть позже".');
+        return response()->json(['message' => 'Видео добавлено в "Посмотреть позже"'], 200);
     }
 
     public function list()
