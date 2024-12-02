@@ -3,11 +3,20 @@
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\YouTubeController;
+use App\Http\Controllers\VideoController;
+
+
+
+
+
+Route::get('/', [VideoController::class, 'index']);
+Route::get('/search', [VideoController::class, 'search'])->name('video.search');
 
 Route::get('/', function (YouTubeController $youtubeController) {
     $videos = $youtubeController->getVideos(); // Получаем видео с YouTube
     return view('welcome', compact('videos')); // Передаем видео в представление
 });
+
 
 Route::get('/dashboard', function () {
     return view('dashboard');
@@ -19,12 +28,6 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-use App\Http\Controllers\VideoController;
 
-Route::middleware(['auth'])->group(function () {
-    Route::get('/videos/create', [VideoController::class, 'create'])->name('videos.create');
-    Route::post('/videos', [VideoController::class, 'store'])->name('videos.store');
-    Route::get('/videos', [VideoController::class, 'index'])->name('videos.index');
-});
 
 require __DIR__.'/auth.php';

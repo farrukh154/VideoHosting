@@ -2,37 +2,37 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Video;
 use Illuminate\Http\Request;
+use Google\Client; // Убедитесь, что вы установили Google API Client
+use Google\Service\YouTube;
 
 class VideoController extends Controller
 {
-    public function create()
+    public function search(Request $request)
     {
-        return view('videos.create');
-    }
+        $query = $request->input('query');
 
-    public function store(Request $request)
-    {
-        $request->validate([
-            'title' => 'required|string|max:255',
-            'description' => 'nullable|string',
-            'youtube_url' => 'required|url',
+        // Настройка клиента YouTube API
+        $client = new Client();
+        $client->setDeveloperKey('AIzaSyBw27L2U0g1Il8ea_6NRxynDhu2dgWQGRU'); // Замените на ваш API ключ
+
+        $youtube = new YouTube($client);
+
+        // Выполнение запроса к YouTube API
+        $searchResponse = $youtube->search->listSearch('id,snippet', [
+            'q' => $query,
+            'maxResults' => 10,
+            'type' => 'video',
         ]);
 
-        $video = new Video();
-        $video->title = $request->title;
-        $video->description = $request->description;
-        $video->youtube_url = $request->youtube_url;
-        $video->user_id = auth()->id();
-        $video->save();
+        $videos = [];
+        foreach ($searchResponse['items'] as $item) {
+            $videos[] = [
+                'id' => $item['id']['videoId'],
+                'snippet' => $item['snippet'],
+            ];
+        }
 
-        return redirect()->route('videos.index')->with('success', 'Video uploaded successfully!');
-    }
-
-    public function index()
-    {
-        $videos = Video::all();
-        return view('videos.index', compact('videos'));
+        return view('video_search', compact('videos', 'query'));
     }
 }
