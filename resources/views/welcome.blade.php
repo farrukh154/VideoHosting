@@ -23,7 +23,7 @@
 <div class="mt-5">
     <h3 class="text-center">Поиск видео</h3>
     <form action="{{ route('video.search') }}" method="GET">
-        <input type="text" name="query" id="searchQuery" placeholder="Введите запрос" class=" mb-2" required>
+        <input type="text" name="query" id="searchQuery" placeholder="Введите запрос" style="color: #000" class=" mb-2" required>
         <button type="submit" class="btn btn-primary">Поиск</button>
     </form>
 </div>
