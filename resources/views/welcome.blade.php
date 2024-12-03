@@ -4,6 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{{ asset('css/styles.css') }}">
     <title>Laravel</title>
 
     <!-- Fonts -->
@@ -19,54 +20,71 @@
     </style>
     @endif
 </head>
-<body class="font-sans antialiased dark:bg-black dark:text-white/50">
-<a href="{{ route('watch_later.list') }}" class="btn btn-secondary">Смотреть позже</a>
-<div class="mt-5">
-    <h3 class="text-center">Поиск видео</h3>
-    <form action="{{ route('video.search') }}" method="GET">
-        <input type="text" name="query" id="searchQuery" placeholder="Введите запрос" style="color: #000" class=" mb-2" required>
-        <button type="submit" class="btn btn-primary">Поиск</button>
-    </form>
+<div class="container mt-5">
+    <div class="row align-items-center">
+        <div >
+             <img class="logo" src="storage/images/Group 1.svg" alt="Image" class="img-fluid">
+        </div>
+        <div class="col text-end">
+            @if (Route::has('login'))
+                <nav class="d-flex justify-content-end">
+                    @auth
+                        <span class="rounded-md d-flex justify-content-center  px-3 py-2 text-black dark:text-white">
+                            <h5 class="user">{{ Auth::user()->name }} </h5>
+                            <a href="{{ route('watch_later.list') }}"><img src="storage/images/Group 13.svg"></a>
+                        </span>
+                        <form action="{{ route('logout') }}" method="POST" class="inline">
+                            @csrf
+                            <button type="submit" class="rounded-md px-3 py-2 text-black ring-1 ring-transparent transition hover:text-black/70 focus:outline-none focus-visible:ring-[#FF2D20] dark:text-white dark:hover:text-white/80 dark:focus-visible:ring-white">
+                                <img src="{{ asset('storage/images/Group 14.svg') }}" alt="Картинка для перехода" style="cursor: pointer;">
+                            </button>
+                        </form>
+                    @else
+                        <a href="{{ route('login') }}" class="rounded-md px-3 py-2 text-black ring-1 ring-transparent transition hover:text-black/70 focus:outline-none focus-visible:ring-[#FF2D20] dark:text-white dark:hover:text-white/80 dark:focus-visible:ring-white">
+                            Log in
+                        </a>
+
+                        @if (Route::has('register'))
+                            <a href="{{ route('register') }}" class="rounded-md px-3 py-2 text-black ring-1 ring-transparent transition hover:text-black/70 focus:outline-none focus-visible:ring-[#FF2D20] dark:text-white dark:hover:text-white/80 dark:focus-visible:ring-white">
+                                Register
+                            </a>
+                        @endif
+                    @endauth
+                </nav>
+            @endif
+        </div>
+    </div>
 </div>
 
-<header>
-    @if (Route::has('login'))
-        <nav class="-mx-3 flex flex-1 justify-end">
-            @auth
-                <span class="rounded-md px-3 py-2 text-black dark:text-white">
-                    Добро пожаловать, {{ Auth::user()->name }}!
-                </span>
-                <form action="{{ route('logout') }}" method="POST" class="inline">
-                    @csrf
-                    <button type="submit" class="rounded-md px-3 py-2 text-black ring-1 ring-transparent transition hover:text-black/70 focus:outline-none focus-visible:ring-[#FF2D20] dark:text-white dark:hover:text-white/80 dark:focus-visible:ring-white">
-                        Выход
-                    </button>
-                </form>
-            @else
-                <a href="{{ route('login') }}" class="rounded-md px-3 py-2 text-black ring-1 ring-transparent transition hover:text-black/70 focus:outline-none focus-visible:ring-[#FF2D20] dark:text-white dark:hover:text-white/80 dark:focus-visible:ring-white">
-                    Log in
-                </a>
+<body class="font-sans antialiased dark:bg-black dark:text-white/50">
+<!-- <a href="{{ route('watch_later.list') }}" class="btn btn-secondary">Смотреть позже</a> -->
 
-                @if (Route::has('register'))
-                    <a href="{{ route('register') }}" class="rounded-md px-3 py-2 text-black ring-1 ring-transparent transition hover:text-black/70 focus:outline-none focus-visible:ring-[#FF2D20] dark:text-white dark:hover:text-white/80 dark:focus-visible:ring-white">
-                        Register
-                    </a>
-                @endif
-            @endauth
-        </nav>
-    @endif
-</header>
-
-<h2 class="text-center">YouTube Videos</h2>
+<div class="container mb-5">
+    <div class="row">
+        <div class="col-12 mt-5 search">
+            <form action="{{ route('video.search') }}" method="GET">
+                <input  ctype="text" name="query" id="searchQuery" placeholder="Введите запрос" style="color: #000" class=" mb-2 search_input" required>
+                <button  type="submit">Поиск</button>
+             </form>
+        </div>
+    </div>
+</div>  
 
 <div class="container">
     <div class="row">
         @foreach($videos as $video)
-            <div class="col-md-4 ps#-5">
-                <div class="video mb-4">
+            <div class="col-md-4 mb-3">
+                <div class="video">
                     @if (isset($video['id']) && is_string($video['id']))
-                        <iframe width="100%" height="255" src="https://www.youtube.com/embed/{{ $video['id'] }}" frameborder="0" allowfullscreen></iframe>
-                    <h5 class="pt-" style="color: white; font-weight: bold;">{{ $video['snippet']['title'] }}</h5>
+                        <iframe style="border:2px solid; border-radius:20px" class="mb-2" width="329px" height="226px" src="https://www.youtube.com/embed/{{ $video['id'] }}" frameborder="0" allowfullscreen></iframe>
+                        <h6 class="video_title" style="color: white; text-align:center;">
+                            {{ $video['snippet']['title'] }}
+                            <span class="btn-sm btn btn-default plus"
+                                  data-video-id="{{ $video['id'] }}"
+                                  data-video-title="{{ $video['snippet']['title'] }}">
+                                +
+                            </span>
+                        </h6>
                     @else
                         <p>Video ID not available.</p>
                     @endif
@@ -74,6 +92,44 @@
             </div>
         @endforeach
     </div>
+</div>
+
+@if(session('message'))
+    <div class="alert alert-success text-center mt-3">
+        {{ session('message') }}
+    </div>
+@endif
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    // Обработчик события клика на элементы с классом 'plus'
+    document.querySelectorAll('.plus').forEach(function(button) {
+        button.addEventListener('click', function() {
+            var videoId = this.getAttribute('data-video-id');
+            var videoTitle = this.getAttribute('data-video-title');
+
+            // Отправляем AJAX-запрос для добавления видео в "Смотреть позже"
+            $.ajax({
+                url: '{{ route("watch_later.add", ":id") }}'.replace(':id', videoId),
+                method: 'POST',
+                data: {
+                    _token: '{{ csrf_token() }}',
+                    video_title: videoTitle,
+                },
+                success: function(response) {
+                    // Изменяем текст на галочку
+                    button.textContent = '✔'; // Заменяем знак плюса на галочку
+                    button.style.color = 'white'; // Изменяем цвет, если нужно
+                    button.style.fontSize = '1.5em'; // Увеличиваем размер, если нужно
+                    alert('Видео добавлено в список "Посмотреть позже"!');
+                },
+                error: function(xhr, status, error) {
+                    alert('Произошла ошибка при добавлении видео');
+                }
+            });
+        });
+    });
+</script>
 
 
 
@@ -109,6 +165,7 @@
         });
     }
 </script>
+
 </body>
 </html>
 

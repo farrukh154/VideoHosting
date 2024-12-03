@@ -19,7 +19,7 @@
                     <form method="POST" action="{{ route('watch_later.remove', $entry->video_id) }}">
                         @csrf
                         @method('DELETE')
-                        <button class="btn btn-danger btn-sm mt-2">Удалить</button>
+                        <button class="btn btn-primary btn-sm mt-2">Удалить</button>
                     </form>
                 </div>
             </div>

@@ -20,7 +20,7 @@
                             <button class="btn btn-primary btn-sm mt-2" 
                                     data-video-id="{{ $video['id'] }}"
                                     data-video-title="{{ $video['snippet']['title'] }}">
-                                Посмотреть позже
+                                +
                             </button>
                         </div>
                     </div>
