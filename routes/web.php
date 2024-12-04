@@ -16,7 +16,7 @@ Route::middleware('auth')->group(function () {
 Route::get('/', [VideoController::class, 'index']);
 Route::get('/search', [VideoController::class, 'search'])->name('video.search');
 
-Route::get('/', function (YouTubeController $youtubeController) {
+Route::get('/', function (YouTubeController $youtubeController){
     $videos = $youtubeController->getVideos(); // Получаем видео с YouTube
     return view('welcome', compact('videos')); // Передаем видео в представление
 });

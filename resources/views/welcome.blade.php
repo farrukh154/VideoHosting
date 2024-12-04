@@ -22,16 +22,21 @@
 </head>
 <div class="container mt-5">
     <div class="row align-items-center">
-        <div >
-             <img class="logo" src="storage/images/Group 1.svg" alt="Image" class="img-fluid">
+        <div>
+            <a href="{{ url('/') }}">
+                <img src="{{ asset('storage/images/Group 1.svg') }}" alt="Логотип" style="cursor: pointer;">
+            </a>
         </div>
         <div class="col text-end">
             @if (Route::has('login'))
                 <nav class="d-flex justify-content-end">
                     @auth
-                        <span class="rounded-md d-flex justify-content-center  px-3 py-2 text-black dark:text-white">
-                            <h5 class="user">{{ Auth::user()->name }} </h5>
-                            <a href="{{ route('watch_later.list') }}"><img src="storage/images/Group 13.svg"></a>
+                        <span class="rounded-md d-flex justify-content-center px-3 py-2 text-black dark:text-white">
+                            <h5 class="user">{{ Auth::user()->name }}</h5>
+                            <img style="margin-top:-5px;" src="{{ asset('storage/images/Group 13.svg') }}" alt="">
+                            <a href="{{ route('watch_later.list') }}">
+                                <img style="padding-left:28px;" src="{{ asset('storage/images/time.svg') }}" alt="">
+                            </a>
                         </span>
                         <form action="{{ route('logout') }}" method="POST" class="inline">
                             @csrf
@@ -76,7 +81,7 @@
             <div class="col-md-4 mb-3">
                 <div class="video">
                     @if (isset($video['id']) && is_string($video['id']))
-                        <iframe style="border:2px solid; border-radius:20px" class="mb-2" width="329px" height="226px" src="https://www.youtube.com/embed/{{ $video['id'] }}" frameborder="0" allowfullscreen></iframe>
+                        <iframe style="border:2px solid; border-radius:20px" class="mb-2 video" width="329px" height="226px" src="https://www.youtube.com/embed/{{ $video['id'] }}" frameborder="0" allowfullscreen></iframe>
                         <h6 class="video_title" style="color: white; text-align:center;">
                             {{ $video['snippet']['title'] }}
                             <span class="btn-sm btn btn-default plus"
